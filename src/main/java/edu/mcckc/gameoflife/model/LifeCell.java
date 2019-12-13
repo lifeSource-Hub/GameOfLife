@@ -1,78 +1,40 @@
 package edu.mcckc.gameoflife.model;
 
-import java.util.Objects;
+import java.awt.*;
+import java.util.HashMap;
 
-public class LifeCell
+public class LifeCell extends Cell
 {
-   private boolean isAlive;
-   private int neighborCount;
-   private static String cellChar;
+    public LifeCell()
+    {
+        this(false, null);
+    }
 
-   public LifeCell()
-   {
-      isAlive = false;
-      neighborCount = 0;
-   }
+    public LifeCell(boolean isAlive, HashMap<CellType, Integer> neighborCount)
+    {
+        setIsAlive(isAlive);
+        setNeighborCount(neighborCount);
+        setCellType(CellType.LIFE);
+        setCellColor(new Color(0, 0, 0));
+    }
 
-   public LifeCell(boolean isAlive, int neighborCount)
-   {
-      setIsAlive(isAlive);
-      setNeighborCount(neighborCount);
-   }
+    @Override
+    public void regenerate()
+    {
+        if (isAlive)
+        {
+            if (neighborCount.get(CellType.LIFE) < 2 || neighborCount.get(CellType.LIFE) > 3)
+            {
+                setIsAlive(false);
+            }
+        }
 
-   public boolean getIsAlive()
-   {
-      return isAlive;
-   }
-
-   public int getNeighborCount()
-   {
-      return neighborCount;
-   }
-
-   public void setIsAlive(boolean isAlive)
-   {
-      this.isAlive = isAlive;
-   }
-
-   public void setNeighborCount(int neighborCount)
-   {
-      this.neighborCount = neighborCount;
-   }
-
-   public void regenerate()
-   {
-      if (isAlive)
-      {
-         if (neighborCount < 2 || neighborCount > 3)
-         {
-            isAlive = false;
-         }
-      }
-
-      if (!isAlive)
-      {
-         if (neighborCount == 3)
-         {
-            isAlive = true;
-         }
-      }
-   }
-
-   public void setCellChar(String cellChar)
-   {
-      // set default char
-      if (Objects.equals(cellChar.trim(), ""))
-      {
-         cellChar = "O";
-      }
-
-      this.cellChar = cellChar;
-   }
-
-   @Override
-   public String toString()
-   {
-      return isAlive ? cellChar : " ";
-   }
+        if (!isAlive)
+        {
+            if (neighborCount.get(CellType.LIFE) == 3)
+            {
+                setIsAlive(true);
+            }
+        }
+    }
 }

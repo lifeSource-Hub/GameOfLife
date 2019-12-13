@@ -7,6 +7,6 @@ public class Driver
 {
   public static void main(String[] args) throws LifeException
   {
-     FrameApp frmApp = new FrameApp("Game of Life Simulation");
+     FrameApp frmApp = new FrameApp();
   }
 }

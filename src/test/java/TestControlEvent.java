@@ -1,4 +1,5 @@
 import edu.mcckc.gameoflife.eventhandling.ControlEvent;
+import edu.mcckc.gameoflife.model.ControlCommand;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,7 +24,7 @@ public class TestControlEvent
       {
          controlEvent = new ControlEvent(this, null, 42, "O");
 
-         Assert.assertEquals(controlEvent.getGridSize(), 42);
+         Assert.assertEquals(42, controlEvent.getGridSize());
       } catch (Exception e)
       {
          e.printStackTrace();
@@ -37,9 +38,9 @@ public class TestControlEvent
 
       try
       {
-         controlEvent = new ControlEvent(this, "init", 0, "O");
+         controlEvent = new ControlEvent(this, ControlCommand.INIT, 0, "O");
 
-         Assert.assertEquals(controlEvent.getCommand(), controlEvent.INIT_COMMAND);
+         Assert.assertEquals(controlEvent.getCommand(), ControlCommand.INIT);
       } catch (Exception e)
       {
          e.printStackTrace();

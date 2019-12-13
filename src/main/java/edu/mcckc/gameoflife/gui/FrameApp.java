@@ -9,55 +9,60 @@ import java.awt.*;
 
 public class FrameApp extends JFrame
 {
-   private PanelGrid pnlGrid;
-   private PanelControl pnlControl;
+   private ControlPanel pnlControl;
+   private ColonyPanel pnlGrid;
 
-   public FrameApp(String title) throws LifeException
+   public FrameApp() throws LifeException
    {
-      this(title, 950, 800);
+      this("The Game of Life: A Cell Colony Simulation", 950, 800);
    }
 
    public FrameApp(String title, int width, int height) throws LifeException
    {
-      pnlGrid = new PanelGrid();
-      pnlControl = new PanelControl();
+      pnlControl = new ControlPanel();
+      pnlGrid = new ColonyPanel();
 
       pnlControl.setListener(new Controllable()
       {
          @Override
          public void controlActionPerformed(ControlEvent evt)
          {
-            String btnCmd = evt.getCommand();
-            Logger.debug("Inside controlActionPerformed, action command: " + btnCmd);
+            // Logger.debug("Inside controlActionPerformed, action command: " + btnCmd);
 
-            if (btnCmd.equals(ControlEvent.INIT_COMMAND))
+            switch (evt.getCommand())
             {
-               try
-               {
-                  pnlGrid.doCommand(evt);
-               } catch (LifeException e)
-               {
-                  Logger.error(e.toString());
-               }
-            }
-            else if (btnCmd.equals(ControlEvent.START_COMMAND))
-            {
-               pnlGrid.start();
-               pnlControl.setLblThreadStatus("Running", new Color(22, 168, 29, 255));
-            }
-            else if (btnCmd.equals(ControlEvent.STOP_COMMAND))
-            {
-               pnlGrid.setContinueSim(false);
-               pnlControl.setLblThreadStatus("Stopped", new Color(255, 0, 0, 200));
+               case INIT:
+                  try
+                  {
+                     pnlGrid.initializePnlGrid(evt);
+                  }
+                  catch (LifeException e)
+                  {
+                     Logger.error(e.toString());
+                  }
+                  break;
+               case START:
+                  pnlGrid.start();
+                  pnlControl.setLblThreadStatus("Running", new Color(22, 168, 29, 255));
+                  break;
+               case STOP:
+                  pnlGrid.setContinueSim(false);
+                  pnlControl.setLblThreadStatus("Stopped", new Color(255, 0, 0, 200));
+                  break;
+               case SINGLE_PATTERN:
+               case STAR_PATTERN:
+                  pnlGrid.setPattern(evt.getCommand());
+                  break;
             }
          }
       });
 
-      add(pnlGrid, BorderLayout.CENTER);
       add(pnlControl, BorderLayout.NORTH);
-      Logger.debug("Inside FrameApp, panels added to frame");
+      add(pnlGrid, BorderLayout.CENTER);
+      // Logger.debug("Inside FrameApp, panels added to frame");
 
       setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+      setTitle(title);
       setSize(width, height);
       setLocationRelativeTo(null);
       setVisible(true);
